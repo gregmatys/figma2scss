@@ -105,22 +105,27 @@ function transform(input) {
 }
 
 function activate(context) {
-    const disposable = vscode.commands.registerCommand('figma2scss.transform', () => {
+    const disposable = vscode.commands.registerCommand('figma2scss.transform', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
 
         const selection = editor.selection;
-        const text = editor.document.getText(selection);
-        if (!text.trim()) {
-            vscode.window.showWarningMessage('Figma → SCSS: zaznacz tekst do przekształcenia');
+        const selectedText = editor.document.getText(selection);
+
+        if (selectedText.trim()) {
+            const result = transform(selectedText);
+            editor.edit(editBuilder => editBuilder.replace(selection, result));
             return;
         }
 
-        const result = transform(text);
+        const clipboard = await vscode.env.clipboard.readText();
+        if (!clipboard.trim()) {
+            vscode.window.showWarningMessage('Figma → SCSS: brak zaznaczenia i pusty schowek');
+            return;
+        }
 
-        editor.edit(editBuilder => {
-            editBuilder.replace(selection, result);
-        });
+        const result = transform(clipboard);
+        editor.edit(editBuilder => editBuilder.insert(editor.selection.active, result));
     });
 
     context.subscriptions.push(disposable);
