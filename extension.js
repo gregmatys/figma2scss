@@ -16,20 +16,42 @@ const REM_PROPS = new Set([
 let cachedFamilyMap = null;
 
 async function buildFamilyMapFromScss() {
-    const files = await vscode.workspace.findFiles('**/scss/includes/_fonts.scss', null, 1);
-    if (!files.length) return null;
+    const mainFiles = await vscode.workspace.findFiles('**/scss/includes/_fonts.scss', null, 1);
+    if (!mainFiles.length) return null;
 
-    const bytes = await vscode.workspace.fs.readFile(files[0]);
-    const content = Buffer.from(bytes).toString();
+    const mainContent = Buffer.from(await vscode.workspace.fs.readFile(mainFiles[0])).toString();
 
-    // Extract keys from $fonts: ( key: ..., key: ... )
-    const mapMatch = content.match(/\$fonts\s*:\s*\(([^)]+)\)/s);
+    const mapMatch = mainContent.match(/\$fonts\s*:\s*\(([^)]+)\)/s);
     if (!mapMatch) return null;
 
+    const tokenToVar = {};
+    for (const m of mapMatch[1].matchAll(/^\s*(\w+)\s*:\s*(\$[\w-]+)/gm)) {
+        tokenToVar[m[1]] = m[2];
+    }
+    if (!Object.keys(tokenToVar).length) return null;
+
+    const varFiles = await vscode.workspace.findFiles('**/scss/includes/variables/_fonts.scss', null, 1);
+    if (!varFiles.length) {
+        const map = {};
+        for (const token of Object.keys(tokenToVar)) map[token] = token;
+        return map;
+    }
+
+    const varContent = Buffer.from(await vscode.workspace.fs.readFile(varFiles[0])).toString();
+
+    const varDefs = {};
+    for (const m of varContent.matchAll(/\$(font-[\w-]+)\s*:\s*["']([^"']+)["']/g)) {
+        varDefs['$' + m[1]] = m[2];
+    }
+
     const map = {};
-    for (const m of mapMatch[1].matchAll(/^\s*(\w+)\s*:/gm)) {
-        const token = m[1];
-        map[token] = token; // keyword = token name, matched case-insensitively against Figma font-family
+    for (const [token, varName] of Object.entries(tokenToVar)) {
+        const fontName = varDefs[varName];
+        if (fontName) {
+            map[fontName.toLowerCase().replace(/-/g, ' ')] = token;
+        } else {
+            map[token] = token;
+        }
     }
 
     return Object.keys(map).length ? map : null;
@@ -45,9 +67,9 @@ async function getFamilyMap() {
 }
 
 async function resolveFontFamily(value) {
-    const lower = value.toLowerCase();
+    const normalized = value.toLowerCase().replace(/-/g, ' ');
     for (const [keyword, token] of Object.entries(await getFamilyMap())) {
-        if (lower.includes(keyword)) return token;
+        if (normalized.includes(keyword)) return token;
     }
     return 'text';
 }
@@ -136,10 +158,13 @@ async function transform(input) {
 }
 
 function activate(context) {
-    const watcher = vscode.workspace.createFileSystemWatcher('**/scss/includes/_fonts.scss');
-    watcher.onDidChange(() => { cachedFamilyMap = null; });
-    watcher.onDidCreate(() => { cachedFamilyMap = null; });
-    context.subscriptions.push(watcher);
+    const invalidate = () => { cachedFamilyMap = null; };
+    for (const pattern of ['**/scss/includes/_fonts.scss', '**/scss/includes/variables/_fonts.scss']) {
+        const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+        watcher.onDidChange(invalidate);
+        watcher.onDidCreate(invalidate);
+        context.subscriptions.push(watcher);
+    }
 
     const disposable = vscode.commands.registerCommand('figma2scss.transform', async () => {
         const editor = vscode.window.activeTextEditor;

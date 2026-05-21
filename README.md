@@ -19,38 +19,42 @@ Reload VSCode after install (`Cmd+Shift+P → Reload Window`).
 
 ## Font family map
 
-The extension maps keywords found in Figma's `font-family` value to tokens used in your `font-family()` mixin.
-
-A font named `GT Era Display Trial` matches `display` → `@include font-family(display, 500);`.
+The extension maps Figma's `font-family` value to the token used in your `font-family()` mixin.
 
 ### Auto-detection
 
-If your project contains `scss/includes/_fonts.scss` with a `$fonts` map, the extension reads token names from it automatically:
+The extension reads your project's SCSS files automatically — no configuration needed. It expects:
+
+- `scss/includes/_fonts.scss` — `$fonts` map: token → variable
+- `scss/includes/variables/_fonts.scss` — variable definitions: `$font-display: "GT-Era-Display", ...`
 
 ```scss
+// variables/_fonts.scss
+$font-display: "GT-Era-Display", sans-serif;
+$font-text: "GT-Era-Text", sans-serif;
+
+// _fonts.scss
 $fonts: (
-  display: (...),
-  text: (...),
-  mono: (...),
+  display: $font-display,
+  text: $font-text,
 );
 ```
 
-The file is watched — changes take effect immediately without reloading the editor.
+A font named `GT Era Display Trial` from Figma matches `GT-Era-Display` → `@include font-family(display, 500);`.
 
-### Manual configuration
+Both files are watched — changes take effect immediately without reloading the editor.
 
-To override auto-detection, set `figma2scss.fontFamilyMap` in your project or user `settings.json`:
+### Manual override
+
+To override auto-detection, set `figma2scss.fontFamilyMap` in `settings.json`. Keys are matched case-insensitively against the Figma font name; first match wins.
 
 ```json
 "figma2scss.fontFamilyMap": {
-  "display": "display",
-  "text": "text",
-  "mono": "mono",
-  "condensed": "condensed"
+  "gt era display": "display",
+  "gt era text": "text",
+  "helvetica": "helvetica"
 }
 ```
-
-Keys are matched case-insensitively against the font name. The first match wins. If nothing matches, `text` is used as a fallback.
 
 ## Transforms
 
