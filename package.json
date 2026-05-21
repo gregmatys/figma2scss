@@ -33,6 +33,19 @@
                 "mac": "cmd+shift+g",
                 "when": "editorTextFocus"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Figma → SCSS",
+            "properties": {
+                "figma2scss.fontFamilyMap": {
+                    "type": "object",
+                    "default": {
+                        "display": "display",
+                        "text": "text"
+                    },
+                    "description": "Maps keywords found in Figma font-family names to SCSS mixin tokens. Key = keyword to match (case-insensitive), value = token passed to font-family()."
+                }
+            }
+        }
     }
 }

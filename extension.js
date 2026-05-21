@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 
-const FAMILY_MAP = { 'display': 'display', 'text': 'text' };
+const DEFAULT_FAMILY_MAP = { 'display': 'display', 'text': 'text' };
 const SKIP_PROPS = new Set(['font-family', 'font-weight', 'font-size', 'line-height', 'letter-spacing', 'font-style', 'leading-trim']);
 const DROP_PROPS = new Set(['angle']);
 const REM_PROPS = new Set([
@@ -13,9 +13,40 @@ const REM_PROPS = new Set([
     'translate', 'inset',
 ]);
 
-function resolveFontFamily(value) {
+let cachedFamilyMap = null;
+
+async function buildFamilyMapFromScss() {
+    const files = await vscode.workspace.findFiles('**/scss/includes/_fonts.scss', null, 1);
+    if (!files.length) return null;
+
+    const bytes = await vscode.workspace.fs.readFile(files[0]);
+    const content = Buffer.from(bytes).toString();
+
+    // Extract keys from $fonts: ( key: ..., key: ... )
+    const mapMatch = content.match(/\$fonts\s*:\s*\(([^)]+)\)/s);
+    if (!mapMatch) return null;
+
+    const map = {};
+    for (const m of mapMatch[1].matchAll(/^\s*(\w+)\s*:/gm)) {
+        const token = m[1];
+        map[token] = token; // keyword = token name, matched case-insensitively against Figma font-family
+    }
+
+    return Object.keys(map).length ? map : null;
+}
+
+async function getFamilyMap() {
+    const config = vscode.workspace.getConfiguration('figma2scss');
+    const fromSettings = config.get('fontFamilyMap');
+    if (fromSettings && Object.keys(fromSettings).length) return fromSettings;
+    if (cachedFamilyMap) return cachedFamilyMap;
+    cachedFamilyMap = await buildFamilyMapFromScss() || DEFAULT_FAMILY_MAP;
+    return cachedFamilyMap;
+}
+
+async function resolveFontFamily(value) {
     const lower = value.toLowerCase();
-    for (const [keyword, token] of Object.entries(FAMILY_MAP)) {
+    for (const [keyword, token] of Object.entries(await getFamilyMap())) {
         if (lower.includes(keyword)) return token;
     }
     return 'text';
@@ -47,7 +78,7 @@ function resolveRem(prop, value) {
     return value.replace(/^(\d+(?:\.\d+)?)px$/, (_, n) => `rem(${n})`);
 }
 
-function transform(input) {
+async function transform(input) {
     const lines = input.trim().split('\n');
     const props = {};
 
@@ -61,7 +92,7 @@ function transform(input) {
     const output = [];
 
     if (props['font-family']) {
-        const family = resolveFontFamily(props['font-family']);
+        const family = await resolveFontFamily(props['font-family']);
         const weight = props['font-weight'] || '400';
         output.push(`@include font-family(${family}, ${weight});`);
     }
@@ -105,6 +136,11 @@ function transform(input) {
 }
 
 function activate(context) {
+    const watcher = vscode.workspace.createFileSystemWatcher('**/scss/includes/_fonts.scss');
+    watcher.onDidChange(() => { cachedFamilyMap = null; });
+    watcher.onDidCreate(() => { cachedFamilyMap = null; });
+    context.subscriptions.push(watcher);
+
     const disposable = vscode.commands.registerCommand('figma2scss.transform', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
@@ -113,7 +149,7 @@ function activate(context) {
         const selectedText = editor.document.getText(selection);
 
         if (selectedText.trim()) {
-            const result = transform(selectedText);
+            const result = await transform(selectedText);
             editor.edit(editBuilder => editBuilder.replace(selection, result));
             return;
         }
@@ -124,7 +160,7 @@ function activate(context) {
             return;
         }
 
-        const result = transform(clipboard);
+        const result = await transform(clipboard);
         editor.edit(editBuilder => editBuilder.insert(editor.selection.active, result));
     });
 

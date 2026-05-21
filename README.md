@@ -17,6 +17,32 @@ Reload VSCode after install (`Cmd+Shift+P → Reload Window`).
 - **text selected** → transforms the selection in place
 - **no selection** → reads from clipboard, inserts at cursor
 
+## Font family map
+
+The extension maps keywords found in Figma's `font-family` value to tokens used in your `font-family()` mixin. The default map:
+
+```json
+{
+  "display": "display",
+  "text": "text"
+}
+```
+
+A font named `GT Era Display Trial` matches `display` → `@include font-family(display, 500);`.
+
+To customize, add to your project or user `settings.json`:
+
+```json
+"figma2scss.fontFamilyMap": {
+  "display": "display",
+  "text": "text",
+  "mono": "mono",
+  "condensed": "condensed"
+}
+```
+
+Keys are matched case-insensitively against the font name. The first match wins. If nothing matches, `text` is used as a fallback.
+
 ## Transforms
 
 | Figma CSS | SCSS output |
