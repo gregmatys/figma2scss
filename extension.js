@@ -10,7 +10,7 @@ const REM_PROPS = new Set([
     'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
     'gap', 'row-gap', 'column-gap',
     'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius', 'border-width',
-    'translate', 'inset',
+    'translate', 'transform', 'inset',
 ]);
 
 let cachedFamilyMap = null;
@@ -97,7 +97,7 @@ function resolveBlur(value) {
 function resolveRem(prop, value) {
     if (!REM_PROPS.has(prop)) return value;
     if (/^\d+(\.\d+)?$/.test(value)) return `rem(${value})`;
-    return value.replace(/^(\d+(?:\.\d+)?)px$/, (_, n) => `rem(${n})`);
+    return value.replace(/(\d+(?:\.\d+)?)px/g, (_, n) => `rem(${n})`);
 }
 
 async function transform(input) {
