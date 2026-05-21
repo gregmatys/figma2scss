@@ -19,18 +19,27 @@ Reload VSCode after install (`Cmd+Shift+P → Reload Window`).
 
 ## Font family map
 
-The extension maps keywords found in Figma's `font-family` value to tokens used in your `font-family()` mixin. The default map:
-
-```json
-{
-  "display": "display",
-  "text": "text"
-}
-```
+The extension maps keywords found in Figma's `font-family` value to tokens used in your `font-family()` mixin.
 
 A font named `GT Era Display Trial` matches `display` → `@include font-family(display, 500);`.
 
-To customize, add to your project or user `settings.json`:
+### Auto-detection
+
+If your project contains `scss/includes/_fonts.scss` with a `$fonts` map, the extension reads token names from it automatically:
+
+```scss
+$fonts: (
+  display: (...),
+  text: (...),
+  mono: (...),
+);
+```
+
+The file is watched — changes take effect immediately without reloading the editor.
+
+### Manual configuration
+
+To override auto-detection, set `figma2scss.fontFamilyMap` in your project or user `settings.json`:
 
 ```json
 "figma2scss.fontFamilyMap": {
