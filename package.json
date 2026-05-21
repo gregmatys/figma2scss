@@ -17,6 +17,9 @@
         "package": "vsce package",
         "publish": "vsce publish"
     },
+    "devDependencies": {
+        "@vscode/vsce": "^3.9.1"
+    },
     "activationEvents": ["onCommand:figma2scss.transform"],
     "main": "./extension.js",
     "contributes": {
