@@ -13,6 +13,10 @@
         "url": "https://github.com/gregmatys/figma2scss"
     },
     "engines": { "vscode": "^1.60.0" },
+    "scripts": {
+        "package": "vsce package",
+        "publish": "vsce publish"
+    },
     "activationEvents": ["onCommand:figma2scss.transform"],
     "main": "./extension.js",
     "contributes": {
