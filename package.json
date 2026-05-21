@@ -1,0 +1,26 @@
+{
+    "name": "figma2scss",
+    "displayName": "Figma → SCSS",
+    "description": "Transforms selected Figma CSS to project SCSS mixins",
+    "version": "1.0.0",
+    "publisher": "local",
+    "engines": { "vscode": "^1.60.0" },
+    "activationEvents": ["onCommand:figma2scss.transform"],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "figma2scss.transform",
+                "title": "Figma → SCSS: Transform selection"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "figma2scss.transform",
+                "key": "ctrl+shift+g",
+                "mac": "cmd+shift+g",
+                "when": "editorTextFocus"
+            }
+        ]
+    }
+}
