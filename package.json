@@ -3,7 +3,15 @@
     "displayName": "Figma → SCSS",
     "description": "Transforms selected Figma CSS to project SCSS mixins",
     "version": "1.0.0",
-    "publisher": "local",
+    "publisher": "gregmatys",
+    "author": {
+        "name": "Greg Matyszewski",
+        "email": "grzegorz@huncwot.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gregmatys/figma2scss"
+    },
     "engines": { "vscode": "^1.60.0" },
     "activationEvents": ["onCommand:figma2scss.transform"],
     "main": "./extension.js",
