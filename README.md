@@ -1,6 +1,6 @@
 # figma2scss
 
-VSCode extension that transforms selected Figma CSS into project SCSS mixins.
+VSCode extension that transforms Figma-copied CSS into project SCSS mixins.
 
 ## Install
 
@@ -8,14 +8,14 @@ VSCode extension that transforms selected Figma CSS into project SCSS mixins.
 bash ~/Work/figma2scss-vscode/install.sh
 ```
 
-Then reload VSCode (`Cmd+Shift+P → Reload Window`).
+Reload VSCode after install (`Cmd+Shift+P → Reload Window`).
 
 ## Usage
 
-`Cmd+Shift+G` — działa dwojako:
+`Cmd+Shift+G` — works two ways:
 
-- **zaznaczony tekst** → zamienia zaznaczenie w miejscu
-- **brak zaznaczenia** → czyta ze schowka, wstawia w miejscu kursora
+- **text selected** → transforms the selection in place
+- **no selection** → reads from clipboard, inserts at cursor
 
 ## Transforms
 
