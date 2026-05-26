@@ -4,11 +4,7 @@ VSCode extension that transforms Figma-copied CSS into project SCSS mixins.
 
 ## Install
 
-```bash
-bash ~/Work/figma2scss-vscode/install.sh
-```
-
-Reload VSCode after install (`Cmd+Shift+P → Reload Window`).
+Search for **figma2scss** in the VS Code Extensions panel and click Install.
 
 ## Usage
 
