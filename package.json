@@ -42,6 +42,15 @@
                 "when": "editorTextFocus"
             }
         ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "figma2scss.transform",
+                    "when": "editorTextFocus",
+                    "group": "1_modification"
+                }
+            ]
+        },
         "configuration": {
             "title": "Figma → SCSS",
             "properties": {
