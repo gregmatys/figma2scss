@@ -136,8 +136,11 @@ async function transform(input) {
     if (props['letter-spacing']) {
         const ls = props['letter-spacing'];
         if (ls.endsWith('%')) {
-            const val = (parseFloat(ls) / 100).toFixed(4).replace(/0+$/, '');
-            output.push(`letter-spacing: ${val}em;`);
+            const num = parseFloat(ls);
+            if (num !== 0) {
+                const val = (num / 100).toFixed(4).replace(/0+$/, '');
+                output.push(`letter-spacing: ${val}em;`);
+            }
         } else if (ls !== '0' && ls !== 'normal') {
             output.push(`letter-spacing: ${ls};`);
         }
