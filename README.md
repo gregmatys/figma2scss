@@ -60,8 +60,8 @@ To override auto-detection, set `figma2scss.fontFamilyMap` in `settings.json`. K
 | `font-size: 18px` + `line-height: 87%` | `@include font-size(18, 0.87);` |
 | `letter-spacing: -1%` | `letter-spacing: -0.01em;` |
 | `width: 390` / `top: 285px` | `width: rem(390)` / `top: rem(285)` |
-| `background: var(--Name, #191919)` | `background: #191919` |
-| `background: #EAEAE3B2` | `background: rgba(#EAEAE3, 0.7)` |
+| `background: var(--Name, &#35;191919)` | `background: &#35;191919` |
+| `background: &#35;EAEAE3B2` | `background: rgba(&#35;EAEAE3, 0.7)` |
 | `backdrop-filter: blur(25px)` | `backdrop-filter: blur(rem(25))` |
 | `opacity: 1` | *(removed)* |
 | `leading-trim`, `font-style`, `angle` | *(removed)* |
