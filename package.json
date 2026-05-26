@@ -2,12 +2,17 @@
     "name": "figma2scss",
     "displayName": "Figma → SCSS",
     "description": "Transforms selected Figma CSS to project SCSS mixins",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "gregmatys",
     "author": {
         "name": "Greg Matyszewski",
         "email": "grzegorz@huncwot.com"
     },
+    "icon": "icon.png",
+    "galleryBanner": {
+        "color": "#E44F96"
+    },
+    "pricing": "Free",
     "repository": {
         "type": "git",
         "url": "https://github.com/gregmatys/figma2scss"

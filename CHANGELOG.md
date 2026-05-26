@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2026-05-26
+
+### Fixed
+- Skip `letter-spacing` when Figma returns `0%` (previously emitted `letter-spacing: 0em`)
+
 ## [1.0.0] - 2026-05-21
 
 ### Added
