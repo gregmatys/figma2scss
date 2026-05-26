@@ -2,7 +2,7 @@
     "name": "figma2scss",
     "displayName": "Figma → SCSS",
     "description": "Transforms selected Figma CSS to project SCSS mixins",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "publisher": "gregmatys",
     "author": {
         "name": "Greg Matyszewski",
