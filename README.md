@@ -22,6 +22,7 @@ Select Figma CSS in the editor and trigger the command — or copy it to the cli
 **Trigger options:**
 
 - Keyboard shortcut: `Cmd+Shift+G` (Mac) / `Ctrl+Shift+G` (Windows/Linux)
+- Icon button in the top-right corner of the editor
 - Right-click in the editor → **Figma → SCSS: Transform selection**
 - Command Palette: `Cmd+Shift+P` → search **Figma → SCSS**
 

@@ -2,7 +2,7 @@
     "name": "figma2scss",
     "displayName": "Figma → SCSS",
     "description": "Transforms selected Figma CSS to project SCSS mixins",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "publisher": "gregmatys",
     "author": {
         "name": "Greg Matyszewski",
@@ -31,7 +31,8 @@
         "commands": [
             {
                 "command": "figma2scss.transform",
-                "title": "Figma → SCSS: Transform selection"
+                "title": "Figma → SCSS: Transform selection",
+                "icon": "$(symbol-color)"
             }
         ],
         "keybindings": [
@@ -43,6 +44,13 @@
             }
         ],
         "menus": {
+            "editor/title": [
+                {
+                    "command": "figma2scss.transform",
+                    "when": "editorTextFocus",
+                    "group": "navigation"
+                }
+            ],
             "editor/context": [
                 {
                     "command": "figma2scss.transform",

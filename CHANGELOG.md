@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.3] - 2026-05-26
+
+### Added
+- Context menu entry (right-click → **Figma → SCSS: Transform selection**)
+- Editor title bar button (icon in top-right corner of the editor)
+- README reorganized: features overview, all trigger options, custom shortcut instructions
+
+## [1.0.2] - 2026-05-26
+
+### Fixed
+- README: corrected default shortcut for Windows/Linux (`Ctrl+Shift+G`)
+
 ## [1.0.1] - 2026-05-26
 
 ### Fixed
