@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.4] - 2026-05-27
+
+### Changed
+- Editor title button, context menu, and keyboard shortcut now appear only in `.scss` files
+
 ## [1.0.3] - 2026-05-26
 
 ### Added
