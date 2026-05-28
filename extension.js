@@ -68,8 +68,9 @@ async function getFamilyMap() {
 
 async function resolveFontFamily(value) {
     const normalized = value.toLowerCase().replace(/-/g, ' ');
+    const compacted = normalized.replace(/\s+/g, '');
     for (const [keyword, token] of Object.entries(await getFamilyMap())) {
-        if (normalized.includes(keyword)) return token;
+        if (normalized.includes(keyword) || compacted.includes(keyword.replace(/\s+/g, ''))) return token;
     }
     return 'text';
 }

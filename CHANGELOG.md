@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.5] - 2026-05-28
+
+### Fixed
+- Font family matching now handles names without spaces — e.g. Figma returns `ES Face` but the project names it `ESFace` in `.scss`
+
 ## [1.0.4] - 2026-05-27
 
 ### Changed
