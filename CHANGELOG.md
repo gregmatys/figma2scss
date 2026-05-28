@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.6] - 2026-05-28
+
+### Fixed
+- Font family map parser now handles both plain (`token: $var`) and tuple (`token: ($var, serif)`) formats in `$fonts`
+- Outer map regex handles nested parentheses so tuple values no longer break parsing
+
 ## [1.0.5] - 2026-05-28
 
 ### Fixed

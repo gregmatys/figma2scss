@@ -21,11 +21,11 @@ async function buildFamilyMapFromScss() {
 
     const mainContent = Buffer.from(await vscode.workspace.fs.readFile(mainFiles[0])).toString();
 
-    const mapMatch = mainContent.match(/\$fonts\s*:\s*\(([^)]+)\)/s);
+    const mapMatch = mainContent.match(/\$fonts\s*:\s*\(((?:[^)(]|\([^)]*\))*)\)/s);
     if (!mapMatch) return null;
 
     const tokenToVar = {};
-    for (const m of mapMatch[1].matchAll(/^\s*(\w+)\s*:\s*(\$[\w-]+)/gm)) {
+    for (const m of mapMatch[1].matchAll(/^\s*([\w-]+)\s*:\s*\(?\s*(\$[\w-]+)/gm)) {
         tokenToVar[m[1]] = m[2];
     }
     if (!Object.keys(tokenToVar).length) return null;
@@ -67,10 +67,12 @@ async function getFamilyMap() {
 }
 
 async function resolveFontFamily(value) {
-    const normalized = value.toLowerCase().replace(/-/g, ' ');
-    const compacted = normalized.replace(/\s+/g, '');
+    const squash = s => s.toLowerCase().replace(/[-\s]/g, '');
+    const full = squash(value);
+    const noTrial = squash(value.replace(/trial/gi, ''));
     for (const [keyword, token] of Object.entries(await getFamilyMap())) {
-        if (normalized.includes(keyword) || compacted.includes(keyword.replace(/\s+/g, ''))) return token;
+        const k = squash(keyword);
+        if (full.includes(k) || noTrial.includes(k)) return token;
     }
     return 'text';
 }
